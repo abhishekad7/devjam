@@ -1,0 +1,7 @@
+Avatar: You display name
+
+Host/room id: id of room on which game is hosted
+
+Host: to hosting a game and waiting other player to join
+
+Join: Use room Id to joi already hosted game

@@ -1,0 +1,253 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Surgical Strike | A Multiplayer Game</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="icon" type="image/png" href='http://{{ host }}/static/gameapp/game-icon.png'>
+
+	<style type="text/css">
+
+		body{
+			margin: 0px 0px 0px 0px;
+			background-color: rgba(0,0,0,0.1);
+		}
+		.main{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.8);
+			background-image: url('http://{{ host }}/static/gameapp/home_wall.jpg');
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			border: solid 0px red;
+		}
+
+		.topbar{
+			position: relative;
+			top: 0px;
+			left: 0px
+			width: 100%;
+			height: auto;
+			min-height: 30px;
+			border: solid 0px red;
+			overflow: hidden;
+			background-color: rgba(0,0,0,0.3);
+		}
+
+		.game-name{
+			position: relative;
+			font-size: 26px;
+			color: #fff;
+			font-weight: bold;
+			padding: 10px 0px 10px 0px;
+			border: solid 0px red;
+			cursor: pointer;
+			animation-name: blow;
+			animation-duration: 2s;
+			-webkit-animation-name: blow;
+			-webkit-animation-duration: 2s;
+		}
+
+		@keyframes blow{
+			
+		}
+
+		@keyframes blow{
+			
+		}
+
+		.content{
+			position: relative;
+			border: solid 0px green;
+			width: 96%;
+			height: 90%;
+			overflow: hidden;
+		}
+
+		.form-container{
+			position: relative;
+			align-self: center;
+			display: block;
+			top: 10%;
+			height: auto;
+			border: solid 0px green;
+			background-color: rgba(225,240,225,0.0);
+		}
+
+		li{
+			list-style: none;
+		}
+
+		#p-name{
+			position: relative;
+			width: 90%;
+			max-width: 500px;
+			height: 60px;
+			background-color: rgba(0,0,0,0.0);
+			font-size: 30px;
+			padding-bottom: 0px;
+			color: rgba(240,240,240,1);
+			border: 0px;
+			font-weight: bold;
+			border-bottom: solid 0px #5580ff;
+		}
+
+		#p-name::placeholder{
+			color: #fff;
+			opacity: 0.7;
+		}
+
+		.p-search-btn{
+			position: relative;
+			width: 45%;
+			max-width: 200px;
+			height: 60px;
+			display: inline-block;
+			background-color: rgba(0,0,0,0.0);
+			font-size: 20px;
+			color: rgba(240,240,240,1);
+			top: 15px;
+			font-weight: bold;
+			border: solid 2px #5580ff;
+			border-radius: 5px;
+			cursor: pointer;
+			left: 0px;
+		}
+
+		.p-search-btn:hover{
+			background-color: rgba(29, 160, 242,1);
+			border-color: #fff;
+			animation-name: resp-btn;
+			animation-duration: 1s;
+			-webkit-animation-name: resp-btn;
+			-webkit-animation-duration: 1s;
+		}
+
+		@keyframes resp-btn{
+			from{
+				opacity: 0;
+			}
+			to{
+				opacity: 1;
+			}
+		}
+
+		@-webkit-keyframes resp-btn{
+			from{
+				opacity: 0;
+			}
+			to{
+				opacity: 1;
+			}
+		}
+
+		.search-anim{
+			position: relative;
+			display: block;
+			width: 50px;
+			height: 50px;
+			background-image: url('http://{{ host }}/static/gameapp/game-icon.png');
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			animation: search-ani 2s linear infinite;;
+			-webkit-animation: search-ani 2s linear infinite;
+			overflow: hidden;
+		}
+
+
+		@keyframes search-ani{
+			from{
+				left: 0%;
+			}
+			to{
+				left: 100%;
+			}
+		}
+
+		@-webkit-keyframes search-ani{
+			from{
+				left: 0%;
+			}
+			to{
+				left: 100%;
+			}
+		}
+
+		.search-container{
+			position: relative;
+			display: none;
+			border: solid 1px red;
+			height: auto;
+			top: 20px;
+			background-color: rgba(240,240,240,0.96);
+			animation: sho-search 1s linear ;
+			-webkit-animation: sho-search 1s linear ;
+		}
+
+
+		@keyframes sho-search{
+			from{
+				opacity: 0;
+			}
+			to{
+				opacity: 1;
+			}
+		}
+
+		@-webkit-keyframes sho-search{
+			from{
+				opacity: 0;
+			}
+			to{
+				opacity: 1;
+			}
+		}
+
+
+	</style>
+</head>
+<body>
+<center>
+	<div class="main">
+		<div class="topbar">
+			<span class="game-name">Surgical Strike</span>
+		</div>
+
+		<div class="content" id="content">
+			<div id="p-search-contain" class="search-container">
+				<div style="text-align: left;">
+					<span style="color: #20AA55; font-size: 25px; font-weight: bold;">Getting you in</span><span class='search-anim'></span>
+				</div>
+			</div>
+
+			<div id="p-form" class="form-container" style="">
+				<form method="get" action="{% url 'game' %}">
+				<li><input type="text" name="avatar" id="p-name" placeholder="Enter Your Avatar" required=""></li>
+				<li><button id="p-join-btn" type="submit" class="p-search-btn">Get Started</button></li>
+			</form>
+			</div>
+
+
+		</div>
+	</div>
+</center>
+</body>
+
+<script type="text/javascript">
+
+	function search_p(elem, type){
+
+		var avatar=document.getElementById("p-name").value;
+		if(avatar.length > 0){
+
+
+			window.location.assign("/"+type+"/?avatar="+avatar);
+
+		} else{
+			document.getElementById("p-name").style.border="solid 2px #f00";
+		}
+	}
+</script>
+</html>

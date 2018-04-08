@@ -1,0 +1,646 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Surgical Strike | A Multiplayer Game</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="icon" type="image/png" href='http://{{ host }}/static/gameapp/game-icon.png'>
+
+	<style type="text/css">
+		body{
+			margin: 0px 0px 0px 0px;
+			background-color: rgba(0,0,0,0.1);
+		}
+
+		.main{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.8);
+			background-image: url('http://{{ host }}/static/gameapp/back1.jpg');
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			border: solid 0px red;
+			overflow: hidden;
+			padding: 0px 0px 0px 0px;
+		}
+
+		.topbar{
+			position: relative;
+			top: 0px;
+			left: 0px
+			width: 100%;
+			height: auto;
+			min-height: 30px;
+			border: solid 0px red;
+			overflow: hidden;
+			background-color: rgba(0,0,0,0.3);
+		}
+
+		.game-name{
+			position: relative;
+			font-size: 20px;
+			color: #fff;
+			font-weight: bold;
+			padding: 10px 0px 10px 0px;
+			border: solid 0px red;
+			cursor: pointer;
+		}
+
+		.game-content{
+			position: relative;
+			width: 98%;
+			top: 20px;
+			border: solid 0px red;
+
+		}
+
+		li{
+			list-style: none;
+		}
+
+		.join-container input{
+			width: 60%;
+			max-width: 200px;
+			height: 27px;
+			font-size: 18px;
+			color: rgba(240, 240, 242, 0.9);
+			border-radius: 5px;
+			border: solid 2px rgba(240, 240, 242, 1);
+			background-color: rgba(0,0,0,0.0);
+			padding: 1px 5px 1px 5px;
+		}
+
+		.join-container input::placeholder{
+			color: #fff;
+		}
+
+		.join-container button{
+			width: 30%;
+			max-width: 80px;
+			height: 27px;
+			font-size: 18px;
+			color: rgba(240, 240, 242, 0.9);
+			border: solid 2px rgba(240, 240, 240, 1);
+			background-color: rgba(0,0,0,0);
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.join-container button:hover{
+			background-color: rgba(240,240,240,1);
+			color: rgba(0,0,0,1);
+			-webkit-animation: btn-resp .4s linear;
+			animation: btn-resp .4s linear;
+		}
+
+		@-webkit-keyframes btn-resp{
+			from{
+				color: rgba(240, 240, 242, 0.9);
+				background-color: rgba(0,0,0,0);
+			}
+			to{
+				background-color: rgba(240,240,240,1);
+				color: rgba(0,0,0,1);
+			}
+		}
+
+		@keyframes btn-resp{
+			from{
+				color: rgba(240, 240, 242, 0.9);
+				background-color: rgba(0,0,0,0);
+			}
+			to{
+				background-color: rgba(240,240,240,1);
+				color: rgba(0,0,0,1);
+			}
+		}
+
+		.host-footer{
+			position: fixed;
+			bottom: 0px;
+			width: 100%;
+			height: 40px;
+			border: solid 0px red;
+		}
+
+		.host-footer button{
+			background-color: rgba(29, 160, 242,1);
+			border: solid 1px #fff;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			color: #fff;
+			font-size: 30px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		.game_connect{
+			position: fixed;
+			display: none;
+			top: 0px;
+			left: 0px;
+			width: 100%;
+			height: 100%;
+			color: #fff;
+			background-color: rgba(0,0,0,1);
+			z-index: +2;
+		}
+
+		#p-search-btn, .r-btn{
+			position: relative;
+			display: block;
+			color: #fff;
+			font-size: 14px;
+			width: 98%;
+			max-width: 500px;
+			height: 50px;
+			background-color: rgba(29, 160, 242,1);
+			border: solid 1px #fff;
+			cursor: pointer;
+		}
+
+		.s-r-top{
+			position: relative;
+			padding: 5px 10px 5px 10px;
+		}
+
+		#search_results{
+			position: relative;
+			top: 20px;
+			overflow: auto;
+			height: 80%;
+			padding: 20px 5px 20px 5px;
+			border: solid 0px red;
+		}
+
+		.top-to-bottom{
+			display: block;
+			animation: coming .6s linear;
+			-webkit-animation: coming .6s linear;
+		}
+
+		@keyframes coming{
+			from{
+				height: 0%;
+			}
+			to{
+				height: 100%;
+			}
+		}
+
+		@-webkit-keyframes coming{
+			from{
+				height: 0%;
+			}
+			to{
+				height: 100%;
+			}
+		}
+
+		.searching{
+			position: relative;
+			display: block;
+			border: solid 2px #fff;
+			background-color: rgba(29, 160, 242,1);
+			width: 96%;
+			height: 50px;
+			background-image: url('http://{{ host }}/static/gameapp/game-icon.png');
+			background-repeat: no-repeat;
+			background-size: 50px 50px;
+			animation: bgltr 3s linear;
+			-webkit-animation: bgltr 3s linear infinite;
+
+		}
+
+		#search_results span{
+			position: relative;
+			display: block;
+			border: solid 2px #fff;
+			background-color: rgba(29, 160, 242,1);
+			width: 96%;
+			height: 50px;
+			cursor: pointer;
+		}
+
+		@keyframes bgltr{
+			from{
+				background-position: 0%;
+			}
+			to{
+				background-position: 100%;
+			}
+		}
+	</style>
+</head>
+
+<body>
+<center>
+ <!-- Main Body -->
+<div class="main" id="main">
+
+	<div class="topbar">
+		<span class="game-name"><span style="color: #55eecc">In Game</span> <span style="color: rgba(40, 210, 55, 1);">{{ avatar }}</span></span>
+	</div>
+
+	<div class="game-content">
+		<div class="join-container">
+			<li><input type="text" name="join_id" id="join_id" placeholder="Room ID">&nbsp;<button onclick="join_game(document.getElementById('join_id').value)">Join</button></li>
+		</div>
+		<br>
+		<button id="p-search-btn" onclick="show_search()">Show online players</button>
+	</div>
+
+</div>
+
+<!-- HOST Button -->
+
+<div class="host-footer">
+	<button onclick="host_game()">Host Game</button>
+</div>
+
+<!-- Search Block -->
+
+<div id="search_results_container" class="game_connect">
+	<div class="s-r-top">
+		<span style="float: left; font-weight: bold;padding: 2px 5px 2px 5px; color: rgba(40, 200, 80, 1); cursor: pointer;" onclick="this.parentNode.parentNode.classList.remove('top-to-bottom');">Back</span>
+		<span style="font-weight: bold;">Online Players</span>
+		<span style="float: right; font-weight: bold; padding: 2px 5px 2px 5px; color: rgba(40, 200, 80, 1); cursor: pointer;" onclick="search_online_players()">Refresh</span>
+	</div>
+
+	<div id="search_results">
+		<span class="searching">Searching...</span>
+	</div>
+</div>
+
+<!--Game Connect Block-->
+
+<div id="game_connect" class="game_connect">
+	<div class="s-r-top">
+		<span style="float: left; font-weight: bold;padding: 2px 5px 2px 5px; color: rgba(40, 200, 80, 1); cursor: pointer;" onclick="cancel_host();if(guest_id==1) {search_online_players();}" id="host_back_btn">Back</span>
+		<span style="font-weight: bold;" id="span_host">Hosting Game</span>
+		<span style="float: right; font-weight: bold;padding: 2px 5px 2px 5px; color: rgba(40, 200, 80, 1); cursor: pointer;" onclick="if(host_id!=0) {chat_box()}" id="host_back_btn">Chat</span>
+
+	</div>
+
+	<div style="position: relative;top: 10px;" id="game_lobby">
+		<span class="searching" id="host_stat">Connecting...</span><br>
+		<button class="r-btn" style="font-size: 24px;font-weight: bold; display: none;" id="r-btn" onclick="ready_to_play()">Ready</button>
+	</div>
+	
+</div>
+
+<!-- Game Arena -->
+
+<div id="game_div" class="game_connect" style="">
+	
+	<!--<iframe src="http://{{ host }}/static/gameapp/dev/main.html" width="100%" height="100%"></iframe>-->
+
+</div>
+</center>
+</body>
+
+<script type="text/javascript">
+	var avatar="{{ avatar }}";
+	var host_id=0;
+	var host_name="";
+	var guest_id=0;
+	var player_type="";
+	var readygame=false;
+	var readygameopp=false;
+
+	var me={"started":false, "ready":false};
+
+//On window close event handle
+
+	window.onbeforeunload=function(){
+			cancel_host();
+
+		return null;
+	};
+
+window.addEventListener("beforeunload", function (e) {
+		cancel_host();
+
+	(e || window.event).returnValue = null;
+	return null;
+});
+
+// connecting web socket
+
+	function connect_socket(){
+		gameSocket = new  WebSocket('ws://'+window.location.host+'/ws/game/'+host_id+'/');
+		gameSocket.onopen=function(){
+			if(guest_id==1){
+				document.getElementById("host_stat").innerHTML="Connected to "+host_name+"(Room id="+host_id+")";
+				document.getElementById("host_stat").style.backgroundSize="0px 0px";
+				document.getElementById('r-btn').style.display="block";
+				var context = {'type': "connect", 'avatar': avatar, 'user': "guest"};
+				gameSocket.send(JSON.stringify(context));
+			} else {
+				document.getElementById("host_stat").innerHTML="Connected, Waiting for opponent...";
+
+
+			}
+		};
+
+
+		//Recieving frames from web socket
+		gameSocket.onmessage = function(e){
+			var data=JSON.parse(e.data);
+			var type=data.type;
+
+			//On game join
+			if(type == "connect"){
+				if(guest_id==0){
+					var ele=document.getElementById("host_stat");
+					ele.style.backgroundSize="0% 0%";
+					ele.innerHTML="Connected to "+data.avatar;
+					document.getElementById('r-btn').style.display="block";
+
+				}
+			}
+			//on game leave
+			if(type == "disconnect"){
+				if(guest_id==0){
+					var ele=document.getElementById("host_stat");
+					ele.style.backgroundSize="50px 50px";
+					ele.innerHTML="Connected, Waiting for opponent... ";
+					document.getElementById("game_div").style.display="none";
+					var rb=document.getElementById('r-btn');
+					rb.style.display="none";
+					rb.style.backgroundColor="rgba(29, 160, 242,1)";
+
+				}
+			}
+
+			//on host disconnect
+			if(type == "host_disconnect"){
+				if(guest_id==1){
+					var ele=document.getElementById("game_connect");
+					ele.classList.remove("top-to-bottom");
+					guest_id=0;
+					gameSocket.close();
+					search_online_players();
+					document.getElementById("game_div").style.display="none";
+					alert('Host disconnected');
+				}
+			}
+
+			//on ready to play
+			if(type == "ready"){
+				if(data.user=="host"){
+					if(data.readygame){
+						if(guest_id==1){
+							var ele=document.getElementById("host_stat");
+							ele.style.backgroundColor="rgba(66, 244, 69, 1)";
+							readygameopp=true;
+							if(readygameopp && readygame){
+								start_count();
+							}
+						} else {
+							var ele=document.getElementById("r-btn");
+							ele.style.backgroundColor="rgba(66, 244, 69, 1)";
+							ele.innerHTML="Not Ready";
+							if(readygame && readygameopp){
+								start_count();
+							}
+						}
+					} else {
+						if(guest_id==1){
+							var ele=document.getElementById("host_stat");
+							ele.style.backgroundColor="rgba(29, 160, 242, 1)";
+							readygameopp=false;
+						} else {
+							var rb=document.getElementById('r-btn');
+							rb.innerHTML="Ready";
+							rb.style.backgroundColor="rgba(29, 160, 242,1)";
+						}
+
+					}
+				} else if(data.user=="guest"){
+					if(data.readygame){
+						if(guest_id==0){
+							var ele=document.getElementById("host_stat");
+							ele.style.backgroundColor="rgba(66, 244, 69, 1)";
+							readygameopp=true;
+							if(readygame && readygameopp){
+								start_count();
+							}
+						} else {
+							var ele=document.getElementById("r-btn");
+							ele.style.backgroundColor="rgba(66, 244, 69, 1)";
+							ele.innerHTML="Not Ready";
+							if(readygame && readygameopp){
+								start_count();
+							}
+						}
+					} else {
+						if(guest_id==0){
+							var ele=document.getElementById("host_stat");
+							ele.style.backgroundColor="rgba(29, 160, 242, 1)";
+							readygameopp=false;
+						} else {
+							var rb=document.getElementById('r-btn');
+							rb.innerHTML="Ready";
+							rb.style.backgroundColor="rgba(29, 160, 242,1)";
+						}
+
+					}
+				}
+			}
+
+			if(type == "startgame"){
+				
+			}
+
+		};
+
+		
+	}
+
+
+	//showing search container
+
+	function show_search(){
+		var elem=document.getElementById("search_results_container");
+		elem.classList.add("top-to-bottom");
+		search_online_players();
+
+	}
+
+
+	// AJAX to search online players
+	function search_online_players(){
+		document.getElementById("search_results").innerHTML="<span class='searching'>Searching...</span>";
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange=function(){
+			if(this.readyState == 4 && this.status==200){
+				var dat=JSON.parse(this.responseText);
+				if(dat.success){
+					var s="<span>"+dat.players.length+" players online</span><br>";
+					for(var i=0;i<dat.players.length; i++){
+						s+="<span class='' onclick='join_game("+dat.players[i][1]+")'>"+dat.players[i][0]+", host id = "+dat.players[i][1]+"</span><br>";
+					}
+					document.getElementById("search_results").innerHTML=s;
+				} else {
+					alert("not ");
+				}
+			}
+		};
+
+		xhttp.open("GET", "{% url 'search' %}", true);
+		xhttp.send();
+
+	}
+
+	// function to host game
+
+	function host_game(){
+		document.getElementById("game_connect").classList.add("top-to-bottom");
+
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange=function(){
+			if(this.readyState == 4 && this.status==200){
+				var dat=JSON.parse(this.responseText);
+				if(dat.success){
+					document.getElementById("span_host").innerHTML="Host ID : "+dat.host_id;
+					host_id=dat.host_id;
+					guest_id=0;
+					player_type="host";
+					connect_socket();
+					
+				} else {
+					alert("not hosted");
+				}
+			}
+		};
+
+		xhttp.open("GET", "{% url 'host_game' %}?avatar="+avatar, true);
+		xhttp.send();
+	}
+
+	//function to join game
+
+	function join_game(id){
+		host_id=id;
+		document.getElementById("host_stat").innerHTML="Connecting..."
+		document.getElementById("host_stat").style.backgroundSize="50px 50px";
+
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange=function(){
+			if(this.readyState == 4 && this.status==200){
+				var dat=JSON.parse(this.responseText);
+				if(dat.success){
+					document.getElementById("game_connect").classList.add('top-to-bottom');
+					player_type="guest";
+					host_name=dat.host_name;
+					guest_id=1;
+					connect_socket();
+					document.getElementById("span_host").innerHTML="Game Lobby";
+				} else {
+					alert("error in joining");	
+				}
+			}
+		};
+
+		xhttp.open("GET", "{% url 'join_game' %}?id="+host_id, true);
+		xhttp.send();
+
+	}
+
+	
+	//Function to close hosting
+
+	function cancel_host(){
+		var elem=document.getElementById("game_connect");
+		elem.classList.remove('top-to-bottom');
+		if(guest_id==0){
+			var xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange=function(){
+				if(this.readyState == 4 && this.status==200){
+					var dat=JSON.parse(this.responseText);
+					if(dat.success){
+						elem.classList.remove('top-to-bottom');
+						host_id=0;
+						guest_id=0;
+						player_type="";
+						var context = {'type': "host_disconnect", 'avatar': avatar, 'user': "host"};
+						gameSocket.send(JSON.stringify(context));
+						gameSocket.close();
+					} else {
+						
+					}
+				}
+			};
+
+			xhttp.open("GET", "{% url 'unhost_game' %}?id="+host_id, true);
+			xhttp.send();
+		} else {
+			var xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange=function(){
+				if(this.readyState == 4 && this.status==200){
+					var dat=JSON.parse(this.responseText);
+					if(dat.success){
+						elem.classList.remove('top-to-bottom');
+						host_id=0;
+						guest_id=0;
+						player_type="";
+						document.getElementById("r-btn").style.display="none";
+						document.getElementById("r-btn").style.backgroundColor="rgba(29, 160, 242, 1)";
+						document.getElementById("r-btn").innerHTML="Ready";
+						var context = {'type': "disconnect", 'avatar': avatar, 'user': "guest"};
+						gameSocket.send(JSON.stringify(context));
+						gameSocket.close();
+					} else {
+						
+					}
+				}
+			};
+
+
+			xhttp.open("GET", "{% url 'unjoin_game' %}?id="+host_id, true);
+			xhttp.send();
+		}
+	}
+
+
+
+	function tab_close(){
+		if(host_id!=0){
+			cancel_host();
+		}
+		return "Done";
+	}
+
+
+	//ready to play function
+	function ready_to_play(){
+		var user="host";
+		if(guest_id==1){
+			user="guest";
+		}
+		readygame=!readygame;
+		var context = {'type': "ready", 'avatar': avatar, 'user': user, 'ready': readygame};
+		gameSocket.send(JSON.stringify(context));
+	}
+
+
+	function start_count(){
+		document.getElementById("game_div").innerHTML="<iframe src='http://{{ host }}/static/gameapp/dev/main.html' width='100%' height='100%'></iframe>";
+		document.getElementById("game_div").style.display="block";
+	}
+
+	function chat_box(){
+		window.open("http://{{ host }}:8001/chat/"+host_id+"?name="+avatar);
+	}
+
+</script>
+</html>
